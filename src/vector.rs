@@ -1,3 +1,5 @@
+use std::{cmp::max, collections::HashSet};
+
 pub fn test(){
     let mut arr:Vec<i32> = vec![0;10];
     arr.push(14);
@@ -78,7 +80,7 @@ pub fn mountain(arr: Vec<i32>) {
     println!("largest mountain {}", largest);
 }
 
-pub fn longest_band(arr: Vec<i32>){
+pub fn longest_band(arr: Vec<i32>)-> u32{
     let mut set:HashSet<i32> = HashSet::new();
     for i in arr.clone(){
         set.insert(i);
@@ -98,7 +100,7 @@ pub fn longest_band(arr: Vec<i32>){
                 cnt += 1;
                 value += 1;
             }
-            println!("band lenght {}", cnt);
+            // println!("band lenght {}", cnt);
             i += 1;
         } else{
             //  band lenght is 1
@@ -106,7 +108,8 @@ pub fn longest_band(arr: Vec<i32>){
         }
         largest_band = max(largest_band, cnt);
     }
-    println!("largest band is of size {}", largest_band);
+    // println!("largest band is of size {}", largest_band);
+    return largest_band;
 }
 
 pub fn rains(arr: Vec<u32>){
@@ -229,4 +232,84 @@ pub fn array_product(arr: Vec<i32>){
     }
 
     println!("Result : {:?}", result);
+}
+
+pub fn max_subarray(arr: Vec<i32>) -> i32{
+    let mut sum =0;
+    let mut current_sum = 0;
+
+    for i in 0..arr.len(){
+        current_sum += arr[i];
+        if current_sum < 0{
+            current_sum = 0;
+        }
+        sum = max(sum, current_sum);
+    }
+
+    return sum;
+}
+
+pub fn three_sum(mut nums: Vec<i32>) -> Vec<Vec<i32>>{
+    /*
+    Given an integer array nums, return all the triplets [nums[i], nums[j], nums[k]] such that i != j, i != k, and j != k, and nums[i] + nums[j] + nums[k] == 0.
+    Notice that the solution set must not contain duplicate triplets.
+     */
+    // let len_nums = nums.len();
+    // let mut result_vec:Vec<Vec<i32>> =Vec::new(); 
+    // if len_nums < 3 {
+    //     return result_vec;
+    // }
+    // for (i, v) in nums.iter().enumerate(){
+    //     // let check = 0 - v;
+    //     let mut hashset: HashSet<i32> = HashSet::new();
+    //     let mut left = i + 1;
+    //     let target = 0 - v;
+    //     while(left < len_nums){
+    //         //  here our target is 0 - v
+    //         let check = target - nums[left];
+    //         if hashset.contains(&check){
+    //             let mut vec_to_insert = vec![*v, nums[left], check];
+    //             vec_to_insert.sort();
+    //             // println!("triplet found {:?}", vec_to_insert);
+    //             if !result_vec.contains(&vec_to_insert){
+    //                 result_vec.push(vec_to_insert);   
+    //             }
+    //         }else{
+    //             hashset.insert(nums[left]);
+    //         }
+    //         left += 1;
+    //     }
+    // }
+    // println!("{:?}", result_vec);
+    // return result_vec
+
+    // another approach
+    let nums_len = nums.len();
+    nums.sort();
+    let mut resutl_vec : Vec<Vec<i32>> = Vec::new();
+    for (i, v) in nums.iter().enumerate(){
+        let target = 0 - v;
+        let mut left = i + 1;;
+        let mut right = nums_len -1 ;
+        while(left < right){
+            let check = nums[left] + nums[right];
+            if check == target {
+                println!("triplet found");
+                let triplet = vec![*v, nums[left], nums[right]];
+                if !resutl_vec.contains(&triplet){
+                    resutl_vec.push(triplet);
+                }
+                left +=1;
+                right -= 1;
+            }
+            else if check > target {
+                right -= 1;
+            }else{
+                left += 1;
+            }
+        }
+    }
+    println!("{:?}", resutl_vec);
+    return resutl_vec;
+
 }
